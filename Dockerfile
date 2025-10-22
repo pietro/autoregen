@@ -9,6 +9,7 @@ RUN set -eux; \
     apt-get upgrade -y; \
     apt-get install -y --no-install-recommends \
       autogen \
+      ca-certificates \
       git \
       m4 \
       perl \
