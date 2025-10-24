@@ -12,6 +12,7 @@ RUN set -eux; \
       ca-certificates \
       git \
       m4 \
+      nodejs \
       perl \
       python3; \
     rm -rf /var/lib/apt/lists/*
