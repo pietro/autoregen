@@ -14,11 +14,15 @@ RUN set -eux; \
       m4 \
       nodejs \
       perl \
-      python3; \
+      python3 \
+      python3-git \
+      python3-termcolor \
+      python3-unidiff; \
     rm -rf /var/lib/apt/lists/*
 
 # Build and install autoconf-2.69 and automake-1.15.1
-RUN set -ex; \
+# Automake depends on autoconf, which is built and installed first
+RUN set -eux; \
     \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
