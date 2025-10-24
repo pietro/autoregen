@@ -1,0 +1,38 @@
+on:
+   schedule:
+     - cron: "40 20 * * *"
+
+name: Update autoregen.py
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.check_changed.outputs.changed }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Download from sourceware
+      run: |
+        curl -sSL --output upstream-autoregen.py 'https://sourceware.org/cgit/builder/plain/builder/containers/autoregen.py'
+        mv upstream-autoregen.py autoregen.py
+        chmod 0755 autoregen.py
+
+    - name: Check for Changes
+      id: check_changes
+      run: |
+        if [[ -n "$(git diff --exit-code)" ]]; then
+          echo "Changes detected."
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "No changes detected."
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Commit and Push Changes
+      if: steps.check_changes.outputs.changed == 'true'
+      run: |
+        git config --global user.name "${{ github.actor }}"
+        git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+        git diff
+        git commit -am 'Updating autoregen.py from upstream'
+        git push
