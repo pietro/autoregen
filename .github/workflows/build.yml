@@ -72,7 +72,7 @@ jobs:
   merge_platform_containers:
     name: Merge Platform Containers
     runs-on: ubuntu-latest
-    needs: push
+    needs: build
     steps:
       - name: Download Digests
         uses: actions/download-artifact@v4
